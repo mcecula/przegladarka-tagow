@@ -3,20 +3,30 @@ import { useEffect, useState } from "react";
 
 const Home = () => {
 
-    const [tag, setTag] = useState([])
+    const [tags, setTags] = useState([]);
 
     const getDane = () => {
-        axios.post('https://api.stackexchange.com/docs/tags')
+        axios.get('https://api.stackexchange.com/2.3/tags?order=desc&sort=popular&site=stackoverflow')
             .then((req) => {
-                console.log(req);
+                setTags(req.data)
             })
-    }
+            .catch((error) => {
+                console.error(error);
+            });
+    };
 
     useEffect(() => {
         getDane();
     }, [])
 
-    return <h2>Home</h2>
-}
+    console.log(tags.items);
+    return (
+        <div className='home'>
+            <div>{tags.map((tag) => {
+                return <h2>{tag}</h2>
+            })}</div>
+        </div>
+    );
+};
 
 export default Home;
