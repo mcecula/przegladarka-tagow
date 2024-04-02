@@ -1,0 +1,16 @@
+.home {
+    padding: 10px;
+}
+
+.tagItem, .number {
+    max-width: 600px;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    margin: auto;
+    margin-bottom: 5px;
+}
+
+label, input, select {
+    margin: 10px;
+   
+}
