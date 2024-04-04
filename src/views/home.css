@@ -2,7 +2,8 @@
     padding: 10px;
 }
 
-.tagItem, .number {
+.tagItem,
+.number {
     max-width: 600px;
     border: 1px solid #000000;
     border-radius: 5px;
@@ -10,7 +11,17 @@
     margin-bottom: 5px;
 }
 
-label, input, select {
+label,
+input,
+select {
     margin: 10px;
-   
+
+}
+
+.pageChange {
+    margin: 10px;
+}
+
+.pageChange :hover {
+    cursor: pointer;
 }

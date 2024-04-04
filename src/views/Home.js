@@ -8,12 +8,14 @@ const Home = () => {
 
     const [tags, setTags] = useState([]);
     const [pagesize, setPagesize] = useState(10);
+    const [page, setPage] = useState();
+
 
     const getDane = () => {
-        axios.get('https://api.stackexchange.com/2.3/tags?pagesize=15&order=desc&sort=popular&site=stackoverflow',)
+        axios.get(`https://api.stackexchange.com/2.3/tags?pagesize=${pagesize}&order=desc&sort=popular&site=stackoverflow`,)
             .then((req) => {
                 setTags(req.data.items)
-                setPagesize()
+                setPage(1)
             })
             .catch((error) => {
                 console.error(error);
@@ -39,14 +41,17 @@ const Home = () => {
         setPagesize(newSize)
     };
 
+    const handleNextPage = () => { setPage(page - 1) }
+    const handlePreviousPage = () => { setPage(page + 1) }
 
-
-
-
-    console.log(tags);
+    /*   console.log(tags); */
     return (
         <div className="home" id='home'>
             <div className=''>
+                <button className='pageChange' onClick={handleNextPage}>Previous </button>
+                <span>{page} {page + 1} {page + 2} {page + 3 + '...'}</span>
+                <button className='pageChange' onClick={handlePreviousPage}>Next </button>
+
                 <div className='number'>
                     <label type="number">Quantity (between 1 and 15):</label>
                     <input type="number" id="quantity" name="quantity" min="1" max="15" onChange={handleChangePageSize} value={pagesize} ></input><br />
@@ -54,7 +59,7 @@ const Home = () => {
                     <label >Sortuj wedlug :</label>
                     <select type='text'  >
                         <option value={tags.sort(tagName)}> A-Z</option>
-                        <option /* value={tags.reverse(tagName)} */> Z-A</option> {/* jak zrobic na odrowt */}
+                        <option /* value={tags.reverse(tagName)} */> Z-A</option>
                     </select>
                 </div>
 
@@ -67,12 +72,10 @@ const Home = () => {
                     );
                 })}
             </div>
-
-
+            <button className='pageChange' onClick={handleNextPage}>Previous </button>
+            <span>{page} {page + 1} {page + 2} {page + 3 + '...'}</span>
+            <button className='pageChange' onClick={handlePreviousPage}>Next </button>
         </div>
-
-
-
 
     );
 };
