@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from "react";
 import './home.css'
+import error from "../error/error.gif";
 
 
 
@@ -11,16 +12,20 @@ const Home = () => {
     const [page, setPage] = useState();
 
 
+
     const getDane = () => {
-        axios.get(`https://api.stackexchange.com/2.3/tags?pagesize=${pagesize}&order=desc&sort=popular&site=stackoverflow`,)
+        axios.get(`https://api.stackexchange.com/2.3/tags?&pagesize=${pagesize}&order=desc&sort=popular&site=stackoverflow`,)
             .then((req) => {
                 setTags(req.data.items)
                 setPage(1)
             })
             .catch((error) => {
-                console.error(error);
+                console.log(error);
+                return <img src='error' alt='error'/> ;
             });
     };
+   
+    /* page=${page} */
 
     useEffect(() => {
         getDane();
@@ -43,14 +48,28 @@ const Home = () => {
 
     const handleNextPage = () => { setPage(page - 1) }
     const handlePreviousPage = () => { setPage(page + 1) }
+/* 
+    const pagination = {
+        page: 1,
+        setPage: action('setpage'),
+
+    } */
+
+
 
     /*   console.log(tags); */
     return (
         <div className="home" id='home'>
             <div className=''>
-                <button className='pageChange' onClick={handleNextPage}>Previous </button>
-                <span>{page} {page + 1} {page + 2} {page + 3 + '...'}</span>
-                <button className='pageChange' onClick={handlePreviousPage}>Next </button>
+                <div className='pagination'>
+                    <button className='pageChange' onClick={handleNextPage} disabled={page === 1}>Previous </button>
+                    <a href='#'>{page}  </a>
+                    <a href='#'>{page + 1}</a>
+                    <a href='#'>{page + 2}</a>
+                    <a href='#'>{page + 3}</a>
+                    <a href='#'>{'...'}</a>
+                    <button className='pageChange' onClick={handlePreviousPage}>Next </button>
+                </div>
 
                 <div className='number'>
                     <label type="number">Quantity (between 1 and 15):</label>
@@ -71,11 +90,19 @@ const Home = () => {
                         </div>
                     );
                 })}
+            </div >
+            <div className='pagination'>
+                <button className='pageChange' onClick={handleNextPage} disabled={page === 1}>Previous </button>
+                <a href='#'>{page}  </a>
+                <a href='#'>{page + 1}</a>
+                <a href='#'>{page + 2}</a>
+                <a href='#'>{page + 3}</a>
+                <a href='#'>{'...'}</a>
+                <button className='pageChange' onClick={handlePreviousPage}>Next </button>
             </div>
-            <button className='pageChange' onClick={handleNextPage}>Previous </button>
-            <span>{page} {page + 1} {page + 2} {page + 3 + '...'}</span>
-            <button className='pageChange' onClick={handlePreviousPage}>Next </button>
         </div>
+
+
 
     );
 };
