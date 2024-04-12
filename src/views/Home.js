@@ -1,35 +1,34 @@
 import axios from 'axios';
 import { useEffect, useState } from "react";
+import ReactPaginate from 'react-paginate';
 import './home.css'
-import error from "../error/error.gif";
-
-
 
 const Home = () => {
 
     const [tags, setTags] = useState([]);
     const [pagesize, setPagesize] = useState(10);
-    const [page, setPage] = useState();
-
-
+    const [page, setPage] = useState(1);
+    const [error, setError] = useState(true);
+    const [pageNumber, setPageNumber] = useState(0);
 
     const getDane = () => {
-        axios.get(`https://api.stackexchange.com/2.3/tags?&pagesize=${pagesize}&order=desc&sort=popular&site=stackoverflow`,)
+        axios.get(`https://api.stackexchange.com/2.3/tags?page=1&pagesize=${pagesize}&pageNumber=${pageNumber}&order=desc&sort=popular&site=stackoverflow`,)
             .then((req) => {
                 setTags(req.data.items)
-                setPage(1)
+              
             })
-            .catch((error) => {
-                console.log(error);
-                return <img src='error' alt='error'/> ;
+            .catch((err) => {
+                console.log(err);
+                setError(false)
             });
     };
-   
-    /* page=${page} */
+
+    console.log(pageNumber);
 
     useEffect(() => {
         getDane();
-    }, [pagesize])
+        setPageNumber(Math.ceil(tags.length / itemsPerPage));
+    }, [pagesize, page])
 
     const tagName = (a, b) => {
         if (a.name < b.name) {
@@ -46,29 +45,38 @@ const Home = () => {
         setPagesize(newSize)
     };
 
+    /* pagination controler */
+    const itemsPerPage = pagesize
+    const startIndex = page * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const subset = tags.slice(startIndex, endIndex);
+
+    
+
+    const handleChangePage = (selectedPage) => {
+        setPage(selectedPage.selected);
+    };
+
+
     const handleNextPage = () => { setPage(page - 1) }
     const handlePreviousPage = () => { setPage(page + 1) }
-/* 
-    const pagination = {
-        page: 1,
-        setPage: action('setpage'),
-
-    } */
 
 
 
     /*   console.log(tags); */
     return (
         <div className="home" id='home'>
-            <div className=''>
-                <div className='pagination'>
-                    <button className='pageChange' onClick={handleNextPage} disabled={page === 1}>Previous </button>
-                    <a href='#'>{page}  </a>
+            {!error && <img src='https://www.blogpoker.org/capung.gif' alt='error '></img>}
+            {error && <div className=''>
+
+                <div className='pagination' onChange={handleChangePage}>
+                    <button className='pageChange' onClick={handleNextPage} disabled={page === 1} >Previous </button>
+                    <a href='#' >{page}  </a>
                     <a href='#'>{page + 1}</a>
                     <a href='#'>{page + 2}</a>
                     <a href='#'>{page + 3}</a>
                     <a href='#'>{'...'}</a>
-                    <button className='pageChange' onClick={handlePreviousPage}>Next </button>
+                    <button className='pageChange' onClick={handlePreviousPage} value={page} >Next </button>
                 </div>
 
                 <div className='number'>
@@ -90,16 +98,18 @@ const Home = () => {
                         </div>
                     );
                 })}
-            </div >
-            <div className='pagination'>
-                <button className='pageChange' onClick={handleNextPage} disabled={page === 1}>Previous </button>
-                <a href='#'>{page}  </a>
-                <a href='#'>{page + 1}</a>
-                <a href='#'>{page + 2}</a>
-                <a href='#'>{page + 3}</a>
-                <a href='#'>{'...'}</a>
-                <button className='pageChange' onClick={handlePreviousPage}>Next </button>
-            </div>
+
+                <div className='pagination'>
+                    <button className='pageChange' onClick={handleNextPage} disabled={page === 1}>Previous </button>
+                    <a href='#'>{page}  </a>
+                    <a href='#'>{page + 1}</a>
+                    <a href='#'>{page + 2}</a>
+                    <a href='#'>{page + 3}</a>
+                    <a href='#'>{'...'}</a>
+                    <button className='pageChange' onClick={handlePreviousPage}>Next </button>
+                </div>
+            </div >}
+
         </div>
 
 
