@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { useEffect, useState } from "react";
-import ReactPaginate from 'react-paginate';
 import './home.css'
+import Box from '@mui/system/Box';
+
 
 const Home = () => {
 
@@ -9,13 +10,12 @@ const Home = () => {
     const [pagesize, setPagesize] = useState(10);
     const [page, setPage] = useState(1);
     const [error, setError] = useState(true);
-    const [pageNumber, setPageNumber] = useState(0);
+
 
     const getDane = () => {
-        axios.get(`https://api.stackexchange.com/2.3/tags?page=1&pagesize=${pagesize}&pageNumber=${pageNumber}&order=desc&sort=popular&site=stackoverflow`,)
+        axios.get(`https://api.stackexchange.com/2.3/tags?pagesize=${pagesize}&page=${page}&order=desc&sort=popular&site=stackoverflow`,)
             .then((req) => {
                 setTags(req.data.items)
-              
             })
             .catch((err) => {
                 console.log(err);
@@ -23,11 +23,10 @@ const Home = () => {
             });
     };
 
-    console.log(pageNumber);
+    /* console.log(pageNumber); */
 
     useEffect(() => {
         getDane();
-        setPageNumber(Math.ceil(tags.length / itemsPerPage));
     }, [pagesize, page])
 
     const tagName = (a, b) => {
@@ -45,38 +44,26 @@ const Home = () => {
         setPagesize(newSize)
     };
 
-    /* pagination controler */
-    const itemsPerPage = pagesize
-    const startIndex = page * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const subset = tags.slice(startIndex, endIndex);
-
-    
-
     const handleChangePage = (selectedPage) => {
-        setPage(selectedPage.selected);
+        setPage(selectedPage);
     };
-
 
     const handleNextPage = () => { setPage(page - 1) }
     const handlePreviousPage = () => { setPage(page + 1) }
 
-
-
     /*   console.log(tags); */
     return (
-        <div className="home" id='home'>
+        <Box className="home" id='home'>
             {!error && <img src='https://www.blogpoker.org/capung.gif' alt='error '></img>}
             {error && <div className=''>
 
                 <div className='pagination' onChange={handleChangePage}>
-                    <button className='pageChange' onClick={handleNextPage} disabled={page === 1} >Previous </button>
-                    <a href='#' >{page}  </a>
-                    <a href='#'>{page + 1}</a>
-                    <a href='#'>{page + 2}</a>
-                    <a href='#'>{page + 3}</a>
-                    <a href='#'>{'...'}</a>
-                    <button className='pageChange' onClick={handlePreviousPage} value={page} >Next </button>
+                    <button className='pageChange' onClick={handleNextPage} disabled={page === 1} >Previous{" "}</button>
+                    <span onClick={() => handleChangePage(page)}>{page}</span>
+                    <span onClick={() => handleChangePage(page + 1)}>{page + 1}</span>
+                    <span onClick={() => handleChangePage(page + 2)}>{page + 2}</span>
+                    <span onClick={() => handleChangePage(page + 3)}>{page + 3}</span>
+                    <button className='pageChange' onClick={handlePreviousPage} value={page} >Next{" "} </button>
                 </div>
 
                 <div className='number'>
@@ -99,21 +86,16 @@ const Home = () => {
                     );
                 })}
 
-                <div className='pagination'>
-                    <button className='pageChange' onClick={handleNextPage} disabled={page === 1}>Previous </button>
-                    <a href='#'>{page}  </a>
-                    <a href='#'>{page + 1}</a>
-                    <a href='#'>{page + 2}</a>
-                    <a href='#'>{page + 3}</a>
-                    <a href='#'>{'...'}</a>
-                    <button className='pageChange' onClick={handlePreviousPage}>Next </button>
+                <div className='pagination' >
+                    <button className='pageChange' onClick={handleNextPage} disabled={page === 1}>Previous{" "} </button>
+                    <span onClick={() => handleChangePage(page)}>{page}</span>
+                    <span onClick={() => handleChangePage(page + 1)}>{page + 1}</span>
+                    <span onClick={() => handleChangePage(page + 2)}>{page + 2}</span>
+                    <span onClick={() => handleChangePage(page + 3)}>{page + 3}</span>
+                    <button className='pageChange' onClick={handlePreviousPage}>Next{" "} </button>
                 </div>
             </div >}
-
-        </div>
-
-
-
+        </Box>
     );
 };
 

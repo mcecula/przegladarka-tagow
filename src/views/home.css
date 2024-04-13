@@ -1,5 +1,7 @@
+
 .home {
     padding: 10px;
+    
 }
 
 .tagItem,
@@ -26,9 +28,8 @@ select {
     cursor: pointer;
 }
 
-.pagination, a,.pagination-container {
+.pagination, span {
     color: black;
-  
     padding: 8px 16px;
     text-decoration: none;
     transition: background-color .3s;
